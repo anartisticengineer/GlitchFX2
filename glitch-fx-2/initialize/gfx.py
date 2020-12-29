@@ -5,5 +5,8 @@ class GlitchFX:
     def __init__(self, imagePath):
         print("Glitch FX started")
         print(imagePath)
-        self.src = cv.imread(imagePath)
-        cv.imshow("Glitch FX", self.src)
+        self.srcPath = imagePath
+
+    def displaySrc(self):
+        src = cv.imread(self.srcPath)
+        cv.imshow("Glitch FX", src)
