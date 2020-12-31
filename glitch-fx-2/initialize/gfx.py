@@ -1,4 +1,5 @@
 import cv2 as cv
+import filters.basic as basic
 
 
 class GlitchFX:
@@ -10,3 +11,6 @@ class GlitchFX:
     def displaySrc(self):
         src = cv.imread(self.srcPath)
         cv.imshow("Glitch FX", src)
+
+    def displayDst(self):
+        pass
