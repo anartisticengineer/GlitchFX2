@@ -1,3 +1,4 @@
+# pylint: disable=no-name-in-module
 import os
 from cv2 import waitKey
 from initialize.gfx import GlitchFX
@@ -17,8 +18,11 @@ if __name__ == "__main__":
         # choose a file already in the src folder
         fileIn = input("Choose an input image file: ")
         # pass the absolute path into GlitchFX: this will be the read image
-        gfx = GlitchFX(os.path.join(os.getcwd(), fileIn))
-        gfx.displaySrc()
+        gfx = GlitchFX(os.path.join(
+            os.getcwd(), "yoshi-t4-hd.jpg" if fileIn == "" else fileIn))
+        gfx.applyEffects()
+        gfx.displayDst()
 
         waitKey()
+        del gfx
         print("Done")
