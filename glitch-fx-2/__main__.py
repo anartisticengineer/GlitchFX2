@@ -19,7 +19,7 @@ if __name__ == "__main__":
         fileIn = input("Choose an input image file: ")
         # pass the absolute path into GlitchFX: this will be the read image
         gfx = GlitchFX(os.path.join(
-            os.getcwd(), "yoshi-t4-hd.jpg" if fileIn == "" else fileIn))
+            os.getcwd(), fileIn))
         gfx.applyEffects()
         gfx.displayDst()
 
