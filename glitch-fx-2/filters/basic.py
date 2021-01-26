@@ -1,33 +1,48 @@
 import cv2 as cv
 import numpy as np
-from util.exstatements import orientationExcep
-#pylint: disable=no-member
+import util.exstatements as ex
+
+# NOISY
 
 
-def noisy(srcImg, pct):
-    gauss = np.random.normal(0, pct, srcImg.size)
-    gauss = np.reshape(gauss, srcImg.shape).astype('uint8')
-    return srcImg + srcImg * gauss
+def noisy(srcImg, **kwargs):
+    _pct = kwargs.get("pct") or 0.1
+    poisson = np.random.poisson(_pct*100, srcImg.size)
+    poisson = poisson.reshape(
+        srcImg.shape[0], srcImg.shape[1], srcImg.shape[2]).astype(np.uint8)
+    dstImg = cv.add(srcImg, poisson)
+    return dstImg
+
+# SCANLINE
 
 
-def scanline(srcImg, orientation="h"):
-    if orientation == "h":
+def scanline(srcImg, **kwargs):
+    _orientation = kwargs.get("orientation") or "h"
+    if _orientation == "h":
         maxI = srcImg.shape[0]
         # every row is all zeros
         srcImg[0:maxI:2] = [0, 0, 0]
-    elif orientation == "v":
+    elif _orientation == "v":
         maxI = srcImg.shape[1]
         srcImg[:, 0:maxI:2] = [0, 0, 0]
     else:
-        raise orientationExcep
+        ex.orientationExcep()
     return srcImg
 
+# HIGHPASS
 
-def highpass(srcImg):
-    filt = np.ones((3, 3), dtype=np.float32)
-    filt[1, 1] = 9.0
-    filt[1, 0::2] = -2.5
-    filt[0::2, 1] = -2.5
-    filt /= 2.0
+
+def highpass(srcImg, **kwargs):
+    _pct = kwargs.get("pct") or 1.0
+    _amp = kwargs.get("amp") or 1.0
+    _kernelSize = kwargs.get("kernelSize") or 3
+    # kernel size should be odd and greater than 1
+    if (_kernelSize % 2 == 0) or (_kernelSize <= 1):
+        ex.invalidKernelSizeExcep()
+    # calculate midpoint from kernel size
+    midpoint = int(_kernelSize/2)
+    filt = np.ones((_kernelSize, _kernelSize), dtype=np.float32)
+    filt *= -1.0 * _pct
+    filt[midpoint, midpoint] = (_kernelSize ** 2) * _amp
     dstImg = cv.filter2D(srcImg, -1, filt)
     return dstImg
