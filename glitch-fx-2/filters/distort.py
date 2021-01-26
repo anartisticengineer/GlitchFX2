@@ -53,7 +53,7 @@ def warpImage(srcImg, **kwargs):
     dstImg = srcImg
     (w, h) = (srcImg.shape[1], srcImg.shape[0])
     # get factor and type of warp
-    _type = kwargs.get("warptype")
+    _type = kwargs.get("warptype") or "shearX"
     _factor = kwargs.get("factor") or 0.0
     # functions
     def shearX(_u, _v): return (_u, (_u+int(_factor*_v)) % w)
