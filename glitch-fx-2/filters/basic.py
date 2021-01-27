@@ -35,7 +35,7 @@ def scanline(srcImg, **kwargs):
 def highpass(srcImg, **kwargs):
     _pct = kwargs.get("pct") or 1.0
     _amp = kwargs.get("amp") or 1.0
-    _kernelSize = kwargs.get("kernelSize") or 3
+    _kernelSize = int(kwargs.get("kernelSize")) or 3
     # kernel size should be odd and greater than 1
     if (_kernelSize % 2 == 0) or (_kernelSize <= 1):
         ex.invalidKernelSizeExcep()

@@ -1,6 +1,6 @@
 # pylint: disable=no-name-in-module
 import os
-from cv2 import waitKey
+from cv2 import waitKey, imwrite
 from initialize.gfx import GlitchFX
 
 if __name__ == "__main__":
@@ -23,6 +23,21 @@ if __name__ == "__main__":
         gfx.applyEffects()
         gfx.displayDst()
 
-        waitKey()
+        k = waitKey()
+        # ~~~~~press s to save the image~~~~~~~
+        if k == ord('s') or k == ord('S'):
+            os.chdir("../")
+            # create dest folder if it doesn't exist
+            if (os.path.isdir("dest") == False):
+                os.mkdir("dest")
+            os.chdir("dest")
+            print("Saving to "+os.getcwd())
+            (origName, ext) = os.path.splitext(fileIn)
+            defaultName = origName + "-glitched" + ext
+            destFileName = input(
+                "Enter a new name (or leave blank for default): ") or defaultName
+            imwrite(destFileName, gfx.dest)
+            print("Sucessfully saved to " +
+                  os.path.join(os.getcwd(), destFileName))
         del gfx
         print("Done")
