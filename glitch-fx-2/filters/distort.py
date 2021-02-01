@@ -1,6 +1,7 @@
 import cv2 as cv
 import numpy as np
 from util.exstatements import orientationExcep
+
 # input: the actual image object, not the path
 
 
@@ -12,20 +13,21 @@ def scanner(srcImg, **kwargs):
     _end = kwargs.get("end") or None
     _orientation = kwargs.get("orientation") or "v"
     if _orientation == "h":
-        x0 = int(_start*w)
-        xf = int(_end*w) if _end else None
+        x0 = int(_start * w)
+        xf = int(_end * w) if _end else None
         srcImg = cv.transpose(srcImg)
         dstImg = cv.transpose(dstImg)
         dstImg[x0:xf, :, :] = srcImg[x0, :, :]
         dstImg = cv.transpose(dstImg)
     elif _orientation == "v":
-        y0 = int(_start*h)
-        yf = int(_end*h) if _end else None
+        y0 = int(_start * h)
+        yf = int(_end * h) if _end else None
         roi = srcImg[y0, :, :]
         dstImg[y0:yf, :, :] = srcImg[y0, :, :]
     else:
         orientationExcep()
     return dstImg
+
 
 # BURN
 
@@ -35,8 +37,7 @@ def burn(srcImg, **kwargs):
     _pct = kwargs.get("pct") or 0.1
     # get threshold
     grayImg = cv.cvtColor(srcImg, cv.COLOR_BGR2GRAY)
-    ret, thresh = cv.threshold(grayImg, int(
-        _pct*255), 255, cv.THRESH_BINARY_INV)
+    ret, thresh = cv.threshold(grayImg, int(_pct * 255), 255, cv.THRESH_BINARY_INV)
 
     thresh.reshape(thresh.shape[0], thresh.shape[1]).astype("?")
     thresh = cv.merge((thresh, thresh, thresh))
@@ -45,6 +46,7 @@ def burn(srcImg, **kwargs):
     invImg[:, :, 2] = 255 - invImg[:, :, 2]
     dstImg = cv.bitwise_or(srcImg, cv.bitwise_and(invImg, thresh))
     return dstImg
+
 
 # WARP IMAGE
 
@@ -56,27 +58,41 @@ def warpImage(srcImg, **kwargs):
     _type = kwargs.get("warptype") or "shearX"
     _factor = kwargs.get("factor") or 0.0
     # functions
-    def shearX(_u, _v): return (_u, (_u+int(_factor*_v)) % w)
-    def shearY(_u, _v): return ((_u+int(_factor*_v)) % h, _v)
+    def shearX(_u, _v):
+        return (_u, (_u + int(_factor * _v)) % w)
 
-    def rotateX(_u, _v): return(
-        _u, int(_u*np.sin(_factor) + _v*np.cos(_factor)) % w)
+    def shearY(_u, _v):
+        return ((_u + int(_factor * _v)) % h, _v)
 
-    def rotateY(_u, _v): return(
-        int(_u*np.cos(_factor) - _v*np.sin(_factor)) % h, _v)
+    def rotateX(_u, _v):
+        return (_u, int(_u * np.sin(_factor) + _v * np.cos(_factor)) % w)
+
+    def rotateY(_u, _v):
+        return (int(_u * np.cos(_factor) - _v * np.sin(_factor)) % h, _v)
 
     # dictionary of functions based on _type
-    f = {"shearX": shearX, "shearY": shearY,
-         "rotateX": rotateX, "rotateY": rotateY}
+    f = {"shearX": shearX, "shearY": shearY, "rotateX": rotateX, "rotateY": rotateY}
     # do the warp
-    for i in range(w*h):
+    for i in range(w * h):
         (u, v) = divmod(i, w)
         (x, y) = f[_type](u, v)
         dstImg[x, y] = srcImg[u, v]
     return dstImg
 
+
 # NOISE DISTORT
 
 
-def noiseDistort(srcImg, **kwargs):
-    pass
+def randomShift(srcImg, **kwargs):
+    dstImg = srcImg
+    (w, h) = (srcImg.shape[0], srcImg.shape[1])
+    # get the kwargs
+    _pct = kwargs.get("pct") or 0.1
+    _start = kwargs.get("start") or 0.4
+    _end = kwargs.get("end") or 0.6
+    for y in range(int(_start * h), int(_end * h)):
+        shift = np.random.randint(int(-w * _pct), int(w * _pct))
+        u = srcImg[:, y]
+        x = [u[(i + shift) % w] for i in range(w)]
+        dstImg[:, y] = x[:]
+    return dstImg

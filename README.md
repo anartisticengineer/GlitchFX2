@@ -1,6 +1,6 @@
-<h1>Glitch FX 2</h1>
+<h1>Glitch FX 2 (WIP)</h1>
 <h2>The 'sequel' to my first GlitchFX generator!</h2>
-
+<p>This project is still a work in progress, but I'm slowly working to add new filters, and improve the documentation.</p>
 <h3>Steps to get started</h3>
 <ul>
 <li>This program uses opencv with python, which requires at Python version 3.6 or higher, and pip 19.3 or higher</li>
@@ -22,6 +22,7 @@
     <tr><td>scanner</td><td>-s, -e, -or</td></tr>
     <tr><td>burn</td><td>-p</td></tr>
     <tr><td>warp</td><td>-t, -f</td></tr>
+    <tr><td>random shift</td><td>-p, -s, -e</td>
 </table>
 <h3>Description of Parameters</h3>
 <table>

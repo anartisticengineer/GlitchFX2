@@ -25,6 +25,8 @@ class GlitchFX:
             self.dest = distort.burn(srcImg, **kwargs)
         elif req == "warp":
             self.dest = distort.warpImage(srcImg, **kwargs)
+        elif req == "rshift":
+            self.dest = distort.randomShift(srcImg, **kwargs)
         else:
             raise Exception("invalid effect")
 
@@ -33,8 +35,7 @@ class GlitchFX:
         while nextFx != "x":
             self.parser.getInputArray(nextFx)
             self.parser.parse()
-            self.glitch(self.parser.getEffect(), self.dest,
-                        **self.parser.getArgDict())
+            self.glitch(self.parser.getEffect(), self.dest, **self.parser.getArgDict())
             nextFx = input(self.prompt)
 
     def displaySrc(self):

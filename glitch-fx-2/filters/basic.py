@@ -7,11 +7,13 @@ import util.exstatements as ex
 
 def noisy(srcImg, **kwargs):
     _pct = kwargs.get("pct") or 0.1
-    poisson = np.random.poisson(_pct*100, srcImg.size)
-    poisson = poisson.reshape(
-        srcImg.shape[0], srcImg.shape[1], srcImg.shape[2]).astype(np.uint8)
+    poisson = np.random.poisson(_pct * 100, srcImg.size)
+    poisson = poisson.reshape(srcImg.shape[0], srcImg.shape[1], srcImg.shape[2]).astype(
+        np.uint8
+    )
     dstImg = cv.add(srcImg, poisson)
     return dstImg
+
 
 # SCANLINE
 
@@ -29,18 +31,19 @@ def scanline(srcImg, **kwargs):
         ex.orientationExcep()
     return srcImg
 
+
 # HIGHPASS
 
 
 def highpass(srcImg, **kwargs):
     _pct = kwargs.get("pct") or 1.0
     _amp = kwargs.get("amp") or 1.0
-    _kernelSize = int(kwargs.get("kernelSize")) or 3
+    _kernelSize = kwargs.get("kernelSize") or 3
     # kernel size should be odd and greater than 1
     if (_kernelSize % 2 == 0) or (_kernelSize <= 1):
         ex.invalidKernelSizeExcep()
     # calculate midpoint from kernel size
-    midpoint = int(_kernelSize/2)
+    midpoint = int(_kernelSize / 2)
     filt = np.ones((_kernelSize, _kernelSize), dtype=np.float32)
     filt *= -1.0 * _pct
     filt[midpoint, midpoint] = (_kernelSize ** 2) * _amp
