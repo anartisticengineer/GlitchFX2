@@ -4,11 +4,14 @@ from filters import basic, distort
 
 
 class GlitchFX:
-    def __init__(self, imagePath):
+    def __init__(self, imagePath, scale=1.0):
         self.prompt = "Enter an effect ~ x to finish: "
         self.parser = ArgParser()
         self.srcPath = imagePath
         self.src = cv.imread(self.srcPath)
+        (w, h) = (self.src.shape[1], self.src.shape[0])
+        newSize = (int(w * scale), int(h * scale))
+        self.src = cv.resize(self.src, newSize, cv.INTER_CUBIC)
         self.dest = self.src
         print(self.srcPath)
 

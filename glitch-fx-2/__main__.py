@@ -34,7 +34,7 @@ if __name__ == "__main__":
             os.chdir("dest")
             print("Saving to " + os.getcwd())
             (origName, ext) = os.path.splitext(fileIn)
-            defaultName = origName + "-glitched" + ext
+            defaultName = origName + "-glitched"
             destFileName = (
                 input(
                     "Enter a new name without extension (or leave blank for default): "
