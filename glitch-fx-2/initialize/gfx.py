@@ -1,11 +1,11 @@
 import cv2 as cv
 from util.argparser import ArgParser
+from util.prompts import Prompt
 from filters import basic, distort
 
 
 class GlitchFX:
     def __init__(self, imagePath, scale=1.0):
-        self.prompt = "Enter an effect ~ x to finish: "
         self.parser = ArgParser()
         self.srcPath = imagePath
         self.src = cv.imread(self.srcPath)
@@ -34,12 +34,12 @@ class GlitchFX:
             raise Exception("invalid effect")
 
     def applyEffects(self):
-        nextFx = input(self.prompt)
+        nextFx = Prompt().enterEffect()
         while nextFx != "x":
             self.parser.getInputArray(nextFx)
             self.parser.parse()
             self.glitch(self.parser.getEffect(), self.dest, **self.parser.getArgDict())
-            nextFx = input(self.prompt)
+            nextFx = Prompt().enterEffect()
 
     def displaySrc(self):
         cv.imshow("Glitch FX src", self.src)
