@@ -4,7 +4,7 @@
 <h3>Steps to get started</h3>
 <ul>
 <li>This program uses opencv with python, which requires at Python version 3.6 or higher, and pip 19.3 or higher</li>
-<li>When downloaded/cloned from the repo, navigate to the root directory ("/glitch-fx") and install the necessary dependencies with: <pre><code>pip install -r requirements.txt</code></pre>After everything is installed, run the main script by typing:<pre><code>python glitch-fx-2</code></pre>into the command line.</li><li>Running this program for the first time will create a "src" folder if not already created, for you to store your images in at the root folder ("/glitch-fx/src").</li>
+<li>When downloaded/cloned from the repo, navigate to the root directory ("/glitch-fx") and install the necessary dependencies with: <pre><code>pip install -r requirements.txt</code></pre>After everything is installed, run the main script by typing:<pre><code>python glitchfx2</code></pre>into the command line.</li><li>Running this program for the first time will create a "src" folder if not already created, for you to store your images in at the root folder ("/glitch-fx/src").</li>
 <li>With a source folder in place, running the above script again should lead to the following prompt: <pre><code>Choose an input image file:</code></pre>where you input the filename of any image in the "src" folder</li>
 <li>A recurring prompt will be shown afterwards saying <pre><code>Enter an effect ~ x to finish:</code></pre> exactly what it sounds like. You can refer to the tables below, but the input will be in the following format:<pre><code>effectname parameter value</code></pre>Example: <pre><code>noisy -p 0.2</code></pre>
 </li>

@@ -7,6 +7,8 @@ import util.exstatements as ex
 
 def noisy(srcImg, **kwargs):
     _pct = kwargs.get("pct") or 0.1
+    if _pct < 0.0 or _pct > 1.0:
+        ex.percentageExcep()
     poisson = np.random.poisson(_pct * 100, srcImg.size)
     poisson = poisson.reshape(srcImg.shape[0], srcImg.shape[1], srcImg.shape[2]).astype(
         np.uint8
