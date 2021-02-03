@@ -2,8 +2,8 @@ glitchfx2/__pycache__/
 glitchfx2/initialize/__pycache__/
 glitchfx2/filters/__pycache__/
 glitchfx2/util/__pycache__/
+tests/
 .vscode/
 src/
 dest/
 .pytest_cache
-tests/
