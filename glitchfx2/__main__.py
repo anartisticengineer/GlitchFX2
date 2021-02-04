@@ -3,6 +3,7 @@ import os
 from cv2 import waitKey, imwrite
 from initialize.gfx import GlitchFX
 from util.prompts import Prompt
+from util.argparser import ImageInputParser
 
 if __name__ == "__main__":
     if os.path.isdir("src") == False:
@@ -14,8 +15,10 @@ if __name__ == "__main__":
 
         # choose a file already in the src folder
         fileIn = Prompt().getInputFile()
+        parser = ImageInputParser(fileIn)
+        (f, s) = (parser.getFileIn(), parser.getScale())
         # pass the absolute path into GlitchFX: this will be the read image
-        gfx = GlitchFX(os.path.join(os.getcwd(), fileIn))
+        gfx = GlitchFX(os.path.join(os.getcwd(), f), scale=s)
         gfx.applyEffects()
         gfx.displayDst()
 
@@ -28,9 +31,8 @@ if __name__ == "__main__":
                 os.mkdir("dest")
             os.chdir("dest")
             print("Saving to " + os.getcwd())
-            (_, ext) = os.path.splitext(fileIn)
-            destFileName = Prompt().getOutputFileName(fileIn)
-            imwrite(destFileName + ext, gfx.dest)
+            destFileName = Prompt().getOutputFileName(f)
+            imwrite(destFileName, gfx.dest)
             print("Sucessfully saved to " + os.path.join(os.getcwd(), destFileName))
         del gfx
         print("Done")
