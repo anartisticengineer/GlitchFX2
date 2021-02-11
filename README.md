@@ -72,3 +72,9 @@
         <td>Any number value</td>
     </tr>
 </table>
+
+<h2>Future Features</h2>
+<ul>
+    <li>GUI? (Ideally with tkinter)</li>
+    <li>More effects TBD</li>
+</ul>
