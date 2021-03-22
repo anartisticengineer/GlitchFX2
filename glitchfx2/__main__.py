@@ -32,7 +32,5 @@ if __name__ == "__main__":
             print("Saving to " + os.getcwd())
             destFileName = Prompt().getOutputFileName(f)
             imwrite(destFileName, gfx.dest)
-            print("Sucessfully saved to " +
-                  os.path.join(os.getcwd(), destFileName))
+            print("Sucessfully saved to " + os.path.join(os.getcwd(), destFileName))
         del gfx
-        print("Done")

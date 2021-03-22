@@ -46,3 +46,6 @@ class GlitchFX:
 
     def displayDst(self):
         cv.imshow("Glitch FX dst", self.dest)
+
+    def __del__(self):
+        print("Done")
