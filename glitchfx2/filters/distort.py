@@ -1,6 +1,7 @@
 import cv2 as cv
 import numpy as np
 from util.exstatements import orientationExcep
+from util.generators import pixelsGenerator
 
 # input: the actual image object, not the path
 
@@ -73,8 +74,7 @@ def warpImage(srcImg, **kwargs):
     # dictionary of functions based on _type
     f = {"shearX": shearX, "shearY": shearY, "rotateX": rotateX, "rotateY": rotateY}
     # do the warp
-    for i in range(w * h):
-        (u, v) = divmod(i, w)
+    for u, v in pixelsGenerator(w, h):
         (x, y) = f[_type](u, v)
         dstImg[x, y] = srcImg[u, v]
     return dstImg
