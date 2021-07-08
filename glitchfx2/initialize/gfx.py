@@ -13,7 +13,10 @@ class GlitchFX:
         newSize = (int(w * scale), int(h * scale))
         self.src = cv.resize(self.src, newSize, cv.INTER_CUBIC)
         self.dest = self.src
-        print(self.srcPath)
+
+    def __str__(self):
+        (w, h) = (self.src.shape[1], self.src.shape[0])
+        return f"\nNew GlitchFX\nSource: {self.srcPath}\nW:{w}px, H:{h}px"
 
     def glitch(self, req, srcImg, **kwargs):
         try:
