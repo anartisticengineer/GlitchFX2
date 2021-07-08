@@ -38,7 +38,7 @@ def burn(srcImg, **kwargs):
     _pct = kwargs.get("pct") or 0.1
     # get threshold
     grayImg = cv.cvtColor(srcImg, cv.COLOR_BGR2GRAY)
-    ret, thresh = cv.threshold(grayImg, int(_pct * 255), 255, cv.THRESH_BINARY_INV)
+    _, thresh = cv.threshold(grayImg, int(_pct * 255), 255, cv.THRESH_BINARY_INV)
 
     thresh.reshape(thresh.shape[0], thresh.shape[1]).astype("?")
     thresh = cv.merge((thresh, thresh, thresh))
@@ -95,4 +95,24 @@ def randomShift(srcImg, **kwargs):
         u = srcImg[:, y]
         x = [u[(i + shift) % w] for i in range(w)]
         dstImg[:, y] = x[:]
+    return dstImg
+
+
+# HUE SHIFT
+
+
+def hueShift(srcImg, **kwargs):
+    dstImg = srcImg
+    (w, h) = (srcImg.shape[1], srcImg.shape[0])
+    # get kwargs
+    _pct = kwargs.get("pct", 0.1)
+    dstImg = cv.cvtColor(srcImg, cv.COLOR_BGR2HSV)
+    hueImg = np.zeros(srcImg.shape, dtype=np.uint8)
+    _, thresh = cv.threshold(srcImg, int(_pct * 255), 255, cv.THRESH_BINARY_INV)
+    # converts array to boolean
+    thresh = thresh != 0
+    toHue = lambda val, maxVal: int((val / maxVal) * 179)
+    for x, y in pixelsGenerator(w, h):
+        hueImg[x, y] = [toHue(x, w), 255, 255]
+    dstImg = srcImg + thresh * hueImg
     return dstImg

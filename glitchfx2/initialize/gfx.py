@@ -1,7 +1,7 @@
 import cv2 as cv
 from util.argparser import ArgParser
 from util.prompts import Prompt
-from filters import basic, distort
+from filters.fxdictionary import effects
 
 
 class GlitchFX:
@@ -16,21 +16,9 @@ class GlitchFX:
         print(self.srcPath)
 
     def glitch(self, req, srcImg, **kwargs):
-        if req == "noisy":
-            self.dest = basic.noisy(srcImg, **kwargs)
-        elif req == "scanline":
-            self.dest = basic.scanline(srcImg, **kwargs)
-        elif req == "highpass":
-            self.dest = basic.highpass(srcImg, **kwargs)
-        elif req == "scanner":
-            self.dest = distort.scanner(srcImg, **kwargs)
-        elif req == "burn":
-            self.dest = distort.burn(srcImg, **kwargs)
-        elif req == "warp":
-            self.dest = distort.warpImage(srcImg, **kwargs)
-        elif req == "rshift":
-            self.dest = distort.randomShift(srcImg, **kwargs)
-        else:
+        try:
+            self.dest = effects[req](srcImg, **kwargs)
+        except KeyError:
             raise Exception("invalid effect")
 
     def applyEffects(self):
