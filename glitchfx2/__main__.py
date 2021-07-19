@@ -18,6 +18,7 @@ if __name__ == "__main__":
         (f, s) = (parser.getFileIn(), parser.getScale())
         # pass the absolute path into GlitchFX: this will be the read image
         gfx = GlitchFX(os.path.join(os.getcwd(), f), scale=s)
+        print(gfx)
         gfx.applyEffects()
         gfx.displayDst()
 

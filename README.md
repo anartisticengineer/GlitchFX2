@@ -23,6 +23,7 @@
     <tr><td>burn</td><td>-p</td></tr>
     <tr><td>warp</td><td>-t, -f</td></tr>
     <tr><td>random shift</td><td>-p, -s, -e</td>
+    <tr><td>hueshift</td><td>-p</td></tr>
 </table>
 <h3>Description of Parameters</h3>
 <table>

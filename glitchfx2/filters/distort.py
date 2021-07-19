@@ -1,6 +1,7 @@
 import cv2 as cv
 import numpy as np
 from util.exstatements import orientationExcep
+from util.generators import pixelsGenerator
 
 # input: the actual image object, not the path
 
@@ -37,7 +38,7 @@ def burn(srcImg, **kwargs):
     _pct = kwargs.get("pct") or 0.1
     # get threshold
     grayImg = cv.cvtColor(srcImg, cv.COLOR_BGR2GRAY)
-    ret, thresh = cv.threshold(grayImg, int(_pct * 255), 255, cv.THRESH_BINARY_INV)
+    _, thresh = cv.threshold(grayImg, int(_pct * 255), 255, cv.THRESH_BINARY_INV)
 
     thresh.reshape(thresh.shape[0], thresh.shape[1]).astype("?")
     thresh = cv.merge((thresh, thresh, thresh))
@@ -73,8 +74,7 @@ def warpImage(srcImg, **kwargs):
     # dictionary of functions based on _type
     f = {"shearX": shearX, "shearY": shearY, "rotateX": rotateX, "rotateY": rotateY}
     # do the warp
-    for i in range(w * h):
-        (u, v) = divmod(i, w)
+    for u, v in pixelsGenerator(w, h):
         (x, y) = f[_type](u, v)
         dstImg[x, y] = srcImg[u, v]
     return dstImg
@@ -95,4 +95,24 @@ def randomShift(srcImg, **kwargs):
         u = srcImg[:, y]
         x = [u[(i + shift) % w] for i in range(w)]
         dstImg[:, y] = x[:]
+    return dstImg
+
+
+# HUE SHIFT
+
+
+def hueShift(srcImg, **kwargs):
+    dstImg = srcImg
+    (w, h) = (srcImg.shape[1], srcImg.shape[0])
+    # get kwargs
+    _pct = kwargs.get("pct", 0.1)
+    dstImg = cv.cvtColor(srcImg, cv.COLOR_BGR2HSV)
+    hueImg = np.zeros(srcImg.shape, dtype=np.uint8)
+    _, thresh = cv.threshold(srcImg, int(_pct * 255), 255, cv.THRESH_BINARY_INV)
+    # converts array to boolean
+    thresh = thresh != 0
+    toHue = lambda val, maxVal: int((val / maxVal) * 179)
+    for x, y in pixelsGenerator(w, h):
+        hueImg[x, y] = [toHue(x, w), 255, 255]
+    dstImg = srcImg + thresh * hueImg
     return dstImg
