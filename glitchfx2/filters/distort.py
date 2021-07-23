@@ -59,10 +59,17 @@ def warpImage(srcImg, **kwargs):
     _type = kwargs.get("warptype") or "shearX"
     _factor = kwargs.get("factor") or 0.0
     # functions
-    shearX = lambda _u, _v: (_u, (_u + int(_factor * _v)) % w)
-    shearY = lambda _u, _v: ((_u + int(_factor * _v)) % h, _v)
-    rotateX = lambda _u, _v: (_u, int(_u * np.sin(_factor) + _v * np.cos(_factor)) % w)
-    rotateY = lambda _u, _v: (int(_u * np.cos(_factor) - _v * np.sin(_factor)) % h, _v)
+    def shearX(_u, _v):
+        return (_u, (_u + int(_factor * _v)) % w)
+
+    def shearY(_u, _v):
+        return ((_u + int(_factor * _v)) % h, _v)
+
+    def rotateX(_u, _v):
+        return (_u, int(_u * np.sin(_factor) + _v * np.cos(_factor)) % w)
+
+    def rotateY(_u, _v):
+        return (int(_u * np.cos(_factor) - _v * np.sin(_factor)) % h, _v)
 
     # dictionary of functions based on _type
     f = {"shearX": shearX, "shearY": shearY, "rotateX": rotateX, "rotateY": rotateY}
