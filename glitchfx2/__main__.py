@@ -15,7 +15,7 @@ if __name__ == "__main__":
         # choose a file already in the src folder
         fileIn = Prompt().getInputFile()
         parser = ImageInputParser(fileIn)
-        (f, s) = (parser.getFileIn(), parser.getScale())
+        (f, s) = (parser.fileIn, parser.scale)
         # pass the absolute path into GlitchFX: this will be the read image
         gfx = GlitchFX(os.path.join(os.getcwd(), f), scale=s)
         print(gfx)

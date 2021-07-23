@@ -18,6 +18,9 @@ class GlitchFX:
         (w, h) = (self.src.shape[1], self.src.shape[0])
         return f"\nNew GlitchFX\nSource: {self.srcPath}\nW:{w}px, H:{h}px"
 
+    def __del__(self):
+        print("Done")
+
     def glitch(self, req, srcImg, **kwargs):
         try:
             self.dest = effects[req](srcImg, **kwargs)
@@ -29,7 +32,7 @@ class GlitchFX:
         while nextFx != "x":
             self.parser.getInputArray(nextFx)
             self.parser.parse()
-            self.glitch(self.parser.getEffect(), self.dest, **self.parser.getArgDict())
+            self.glitch(self.parser.effect, self.dest, **self.parser.argDict)
             nextFx = Prompt().enterEffect()
 
     def displaySrc(self):
@@ -37,6 +40,3 @@ class GlitchFX:
 
     def displayDst(self):
         cv.imshow("Glitch FX dst", self.dest)
-
-    def __del__(self):
-        print("Done")

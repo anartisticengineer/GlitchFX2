@@ -5,13 +5,13 @@ from util.exstatements import scaleExcep, invalidInputSizeExcep
 
 class ArgParser:
     def __init__(self):
-        self.effect = ""
-        self.args = []
-        self.argDict = {}
+        self.__effect = ""
+        self.__args = []
+        self.__argDict = {}
 
     def getInputArray(self, argString):
         argString = argString.strip()
-        self.effect, *self.args = argString.split(" ")
+        self.__effect, *self.__args = argString.split(" ")
 
     def parse(self):
         conversion = {
@@ -24,42 +24,46 @@ class ArgParser:
             "-t": "type",
             "-f": "factor",
         }
-        if len(self.args) % 2 != 0:
+        if len(self.__args) % 2 != 0:
             # must be even number of args
             invalidInputSizeExcep()
         else:
-            self.argDict.clear()
-            for i in range(0, len(self.args), 2):
+            self.__argDict.clear()
+            for i in range(0, len(self.__args), 2):
 
                 def formatArg(x):
                     return x if x.isalpha() else float(x)
 
-                key_i = conversion[self.args[i]]
-                val_i = formatArg(self.args[i + 1])
-                self.argDict[key_i] = val_i
+                key_i = conversion[self.__args[i]]
+                val_i = formatArg(self.__args[i + 1])
+                self.__argDict[key_i] = val_i
 
-    def getEffect(self):
-        return self.effect
+    @property
+    def effect(self):
+        return self.__effect
 
-    def getArgDict(self):
-        return self.argDict
+    @property
+    def argDict(self):
+        return self.__argDict
 
 
 class ImageInputParser:
     def __init__(self, argString):
         argArr = argString.split(" ")
         argArrLen = len(argArr)
-        self.fileIn = argArr[0]
-        self.scale = 1.0
+        self.__fileIn = argArr[0]
+        self.__scale = 1.0
         if argArrLen == 1:
             pass
         elif argArrLen == 2:
-            self.scale = float(argArr[1])
-            if self.scale <= 0.0:
+            self.__scale = float(argArr[1])
+            if self.__scale <= 0.0:
                 scaleExcep()
 
-    def getFileIn(self):
-        return self.fileIn
+    @property
+    def fileIn(self):
+        return self.__fileIn
 
-    def getScale(self):
-        return self.scale
+    @property
+    def scale(self):
+        return self.__scale
