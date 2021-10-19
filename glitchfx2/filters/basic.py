@@ -1,43 +1,43 @@
 import cv2 as cv
 import numpy as np
-import util.exstatements as ex
+import glitchfx2.util.exstatements as ex
 
 # NOISY
 
 
-def noisy(srcImg, **kwargs):
+def noisy(src_img, **kwargs):
     _pct = kwargs.get("pct") or 0.1
     if _pct < 0.0 or _pct > 1.0:
         ex.percentageExcep()
-    poisson = np.random.poisson(_pct * 100, srcImg.size)
-    poisson = poisson.reshape(srcImg.shape[0], srcImg.shape[1], srcImg.shape[2]).astype(
+    poisson = np.random.poisson(_pct * 100, src_img.size)
+    poisson = poisson.reshape(src_img.shape[0], src_img.shape[1], src_img.shape[2]).astype(
         np.uint8
     )
-    dstImg = cv.add(srcImg, poisson)
-    return dstImg
+    dst_img = cv.add(src_img, poisson)
+    return dst_img
 
 
 # SCANLINE
 
 
-def scanline(srcImg, **kwargs):
+def scanline(src_img, **kwargs):
     _orientation = kwargs.get("orientation") or "h"
     if _orientation == "h":
-        maxI = srcImg.shape[0]
+        max_i = src_img.shape[0]
         # every row is all zeros
-        srcImg[0:maxI:2] = [0, 0, 0]
+        src_img[0:max_i:2] = [0, 0, 0]
     elif _orientation == "v":
-        maxI = srcImg.shape[1]
-        srcImg[:, 0:maxI:2] = [0, 0, 0]
+        max_i = src_img.shape[1]
+        src_img[:, 0:max_i:2] = [0, 0, 0]
     else:
         ex.orientationExcep()
-    return srcImg
+    return src_img
 
 
 # HIGHPASS
 
 
-def highpass(srcImg, **kwargs):
+def highpass(src_img, **kwargs):
     _pct = kwargs.get("pct") or 1.0
     _amp = kwargs.get("amp") or 1.0
     _kernelSize = kwargs.get("kernelSize") or 3
@@ -49,5 +49,5 @@ def highpass(srcImg, **kwargs):
     filt = np.ones((_kernelSize, _kernelSize), dtype=np.float32)
     filt *= -1.0 * _pct
     filt[midpoint, midpoint] = (_kernelSize ** 2) * _amp
-    dstImg = cv.filter2D(srcImg, -1, filt)
+    dstImg = cv.filter2D(src_img, -1, filt)
     return dstImg

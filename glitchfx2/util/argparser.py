@@ -1,6 +1,6 @@
 # takes in input args and parses them to determine which
 # effects to apply
-from util.exstatements import scaleExcep, invalidInputSizeExcep
+from glitchfx2.util.exstatements import scaleExcep, invalidInputSizeExcep
 
 
 class ArgParser:

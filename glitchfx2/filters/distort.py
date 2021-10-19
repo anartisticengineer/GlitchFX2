@@ -1,14 +1,14 @@
 import cv2 as cv
 import numpy as np
-from util.exstatements import orientationExcep
-from util.generators import pixelsGenerator
+from glitchfx2.util.exstatements import orientationExcep
+from glitchfx2.util.generators import pixels_generator
 
 # input: the actual image object, not the path
 
 
-def scanner(srcImg, **kwargs):
-    dstImg = srcImg
-    (w, h) = (srcImg.shape[1], srcImg.shape[0])
+def scanner(src_img, **kwargs):
+    dst_img = src_img
+    (w, h) = (src_img.shape[1], src_img.shape[0])
     # get bound(s) and direction
     _start = kwargs.get("start") or 0.9
     _end = kwargs.get("end") or None
@@ -16,25 +16,25 @@ def scanner(srcImg, **kwargs):
     if _orientation == "h":
         x0 = int(_start * w)
         xf = int(_end * w) if _end else None
-        srcImg = cv.transpose(srcImg)
-        dstImg = cv.transpose(dstImg)
-        dstImg[x0:xf, :, :] = srcImg[x0, :, :]
-        dstImg = cv.transpose(dstImg)
+        src_img = cv.transpose(src_img)
+        dst_img = cv.transpose(dst_img)
+        dst_img[x0:xf, :, :] = src_img[x0, :, :]
+        dst_img = cv.transpose(dst_img)
     elif _orientation == "v":
         y0 = int(_start * h)
         yf = int(_end * h) if _end else None
-        roi = srcImg[y0, :, :]
-        dstImg[y0:yf, :, :] = srcImg[y0, :, :]
+        roi = src_img[y0, :, :]
+        dst_img[y0:yf, :, :] = src_img[y0, :, :]
     else:
         orientationExcep()
-    return dstImg
+    return dst_img
 
 
 # BURN
 
 
 def burn(srcImg, **kwargs):
-    dstImg = srcImg
+    dst_img = srcImg
     _pct = kwargs.get("pct") or 0.1
     # get threshold
     grayImg = cv.cvtColor(srcImg, cv.COLOR_BGR2GRAY)
@@ -43,10 +43,10 @@ def burn(srcImg, **kwargs):
     thresh.reshape(thresh.shape[0], thresh.shape[1]).astype("?")
     thresh = cv.merge((thresh, thresh, thresh))
     # get inverse
-    invImg = cv.cvtColor(srcImg, cv.COLOR_BGR2HSV)
-    invImg[:, :, 2] = 255 - invImg[:, :, 2]
-    dstImg = cv.bitwise_or(srcImg, cv.bitwise_and(invImg, thresh))
-    return dstImg
+    inv_img = cv.cvtColor(srcImg, cv.COLOR_BGR2HSV)
+    inv_img[:, :, 2] = 255 - inv_img[:, :, 2]
+    dst_img = cv.bitwise_or(srcImg, cv.bitwise_and(inv_img, thresh))
+    return dst_img
 
 
 # WARP IMAGE
@@ -67,7 +67,7 @@ def warpImage(srcImg, **kwargs):
     # dictionary of functions based on _type
     f = {"shearX": shearX, "shearY": shearY, "rotateX": rotateX, "rotateY": rotateY}
     # do the warp
-    for u, v in pixelsGenerator(w, h):
+    for u, v in pixels_generator(w, h):
         (x, y) = f[_type](u, v)
         dstImg[x, y] = srcImg[u, v]
     return dstImg
@@ -105,7 +105,7 @@ def hueShift(srcImg, **kwargs):
     # converts array to boolean
     thresh = thresh != 0
     toHue = lambda val, maxVal: int((val / maxVal) * 179)
-    for x, y in pixelsGenerator(w, h):
+    for x, y in pixels_generator(w, h):
         hueImg[x, y] = [toHue(x, w), 255, 255]
     dstImg = srcImg + thresh * hueImg
     return dstImg

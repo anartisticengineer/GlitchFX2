@@ -7,3 +7,4 @@ tests/
 src/
 dest/
 .pytest_cache
+.idea/
